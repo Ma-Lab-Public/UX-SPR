@@ -1,0 +1,225 @@
+data
+├── time
+│   ├── test
+│   │   ├── 0.2-attribute-Buda.filtered.txt
+│   │   ├── 0.2-attribute-Delh.filtered.txt
+│   │   ├── 0.2-attribute-Edin.filtered.txt
+│   │   ├── 0.2-attribute-Glas.filtered.txt
+│   │   ├── 0.2-attribute-Kyoto.filtered.txt
+│   │   ├── 0.2-attribute-Osak.filtered.txt
+│   │   ├── 0.2-attribute-Pert.filtered.txt
+│   │   ├── 0.2-attribute-Toro.filtered.txt
+│   │   ├── 0.2-attribute-Vien.filtered.txt
+│   │   ├── 0.2-place-Buda.filtered.txt
+│   │   ├── 0.2-place-Delh.filtered.txt
+│   │   ├── 0.2-place-Edin.filtered.txt
+│   │   ├── 0.2-place-Glas.filtered.txt
+│   │   ├── 0.2-place-Kyoto.filtered.txt
+│   │   ├── 0.2-place-Osak.filtered.txt
+│   │   ├── 0.2-place-Pert.filtered.txt
+│   │   ├── 0.2-place-Toro.filtered.txt
+│   │   ├── 0.2-place-Vien.filtered.txt
+│   │   ├── 0.5-attribute-Buda.filtered.txt
+│   │   ├── 0.5-attribute-Delh.filtered.txt
+│   │   ├── 0.5-attribute-Edin.filtered.txt
+│   │   ├── 0.5-attribute-Glas.filtered.txt
+│   │   ├── 0.5-attribute-Kyoto.filtered.txt
+│   │   ├── 0.5-attribute-Osak.filtered.txt
+│   │   ├── 0.5-attribute-Pert.filtered.txt
+│   │   ├── 0.5-attribute-Toro.filtered.txt
+│   │   ├── 0.5-attribute-Vien.filtered.txt
+│   │   ├── 0.5-place-Buda.filtered.txt
+│   │   ├── 0.5-place-Delh.filtered.txt
+│   │   ├── 0.5-place-Edin.filtered.txt
+│   │   ├── 0.5-place-Glas.filtered.txt
+│   │   ├── 0.5-place-Kyoto.filtered.txt
+│   │   ├── 0.5-place-Osak.filtered.txt
+│   │   ├── 0.5-place-Pert.filtered.txt
+│   │   ├── 0.5-place-Toro.filtered.txt
+│   │   ├── 0.5-place-Vien.filtered.txt
+│   │   ├── 0.8-attribute-Buda.filtered.txt
+│   │   ├── 0.8-attribute-Delh.filtered.txt
+│   │   ├── 0.8-attribute-Edin.filtered.txt
+│   │   ├── 0.8-attribute-Glas.filtered.txt
+│   │   ├── 0.8-attribute-Kyoto.filtered.txt
+│   │   ├── 0.8-attribute-Osak.filtered.txt
+│   │   ├── 0.8-attribute-Pert.filtered.txt
+│   │   ├── 0.8-attribute-Toro.filtered.txt
+│   │   ├── 0.8-attribute-Vien.filtered.txt
+│   │   ├── 0.8-place-Buda.filtered.txt
+│   │   ├── 0.8-place-Delh.filtered.txt
+│   │   ├── 0.8-place-Edin.filtered.txt
+│   │   ├── 0.8-place-Glas.filtered.txt
+│   │   ├── 0.8-place-Kyoto.filtered.txt
+│   │   ├── 0.8-place-Osak.filtered.txt
+│   │   ├── 0.8-place-Pert.filtered.txt
+│   │   ├── 0.8-place-Toro.filtered.txt
+│   │   └── 0.8-place-Vien.filtered.txt
+│   └── train
+│       ├── 0.2-attribute-Buda.filtered.txt
+│       ├── 0.2-attribute-Delh.filtered.txt
+│       ├── 0.2-attribute-Edin.filtered.txt
+│       ├── 0.2-attribute-Glas.filtered.txt
+│       ├── 0.2-attribute-Kyoto.filtered.txt
+│       ├── 0.2-attribute-Osak.filtered.txt
+│       ├── 0.2-attribute-Pert.filtered.txt
+│       ├── 0.2-attribute-Toro.filtered.txt
+│       ├── 0.2-attribute-Vien.filtered.txt
+│       ├── 0.2-place-Buda.filtered.txt
+│       ├── 0.2-place-Delh.filtered.txt
+│       ├── 0.2-place-Edin.filtered.txt
+│       ├── 0.2-place-Glas.filtered.txt
+│       ├── 0.2-place-Kyoto.filtered.txt
+│       ├── 0.2-place-Osak.filtered.txt
+│       ├── 0.2-place-Pert.filtered.txt
+│       ├── 0.2-place-Toro.filtered.txt
+│       ├── 0.2-place-Vien.filtered.txt
+│       ├── 0.5-attribute-Buda.filtered.txt
+│       ├── 0.5-attribute-Delh.filtered.txt
+│       ├── 0.5-attribute-Edin.filtered.txt
+│       ├── 0.5-attribute-Glas.filtered.txt
+│       ├── 0.5-attribute-Kyoto.filtered.txt
+│       ├── 0.5-attribute-Osak.filtered.txt
+│       ├── 0.5-attribute-Pert.filtered.txt
+│       ├── 0.5-attribute-Toro.filtered.txt
+│       ├── 0.5-attribute-Vien.filtered.txt
+│       ├── 0.5-place-Buda.filtered.txt
+│       ├── 0.5-place-Delh.filtered.txt
+│       ├── 0.5-place-Edin.filtered.txt
+│       ├── 0.5-place-Glas.filtered.txt
+│       ├── 0.5-place-Kyoto.filtered.txt
+│       ├── 0.5-place-Osak.filtered.txt
+│       ├── 0.5-place-Pert.filtered.txt
+│       ├── 0.5-place-Toro.filtered.txt
+│       ├── 0.5-place-Vien.filtered.txt
+│       ├── 0.8-attribute-Buda.filtered.txt
+│       ├── 0.8-attribute-Delh.filtered.txt
+│       ├── 0.8-attribute-Edin.filtered.txt
+│       ├── 0.8-attribute-Glas.filtered.txt
+│       ├── 0.8-attribute-Kyoto.filtered.txt
+│       ├── 0.8-attribute-Osak.filtered.txt
+│       ├── 0.8-attribute-Pert.filtered.txt
+│       ├── 0.8-attribute-Toro.filtered.txt
+│       ├── 0.8-attribute-Vien.filtered.txt
+│       ├── 0.8-place-Buda.filtered.txt
+│       ├── 0.8-place-Delh.filtered.txt
+│       ├── 0.8-place-Edin.filtered.txt
+│       ├── 0.8-place-Glas.filtered.txt
+│       ├── 0.8-place-Kyoto.filtered.txt
+│       ├── 0.8-place-Osak.filtered.txt
+│       ├── 0.8-place-Pert.filtered.txt
+│       ├── 0.8-place-Toro.filtered.txt
+│       └── 0.8-place-Vien.filtered.txt
+└── user
+    ├── test
+    │   ├── 0.2-attribute-Buda.filtered.txt
+    │   ├── 0.2-attribute-Delh.filtered.txt
+    │   ├── 0.2-attribute-Edin.filtered.txt
+    │   ├── 0.2-attribute-Glas.filtered.txt
+    │   ├── 0.2-attribute-Kyoto.filtered.txt
+    │   ├── 0.2-attribute-Osak.filtered.txt
+    │   ├── 0.2-attribute-Pert.filtered.txt
+    │   ├── 0.2-attribute-Toro.filtered.txt
+    │   ├── 0.2-attribute-Vien.filtered.txt
+    │   ├── 0.2-place-Buda.filtered.txt
+    │   ├── 0.2-place-Delh.filtered.txt
+    │   ├── 0.2-place-Edin.filtered.txt
+    │   ├── 0.2-place-Glas.filtered.txt
+    │   ├── 0.2-place-Kyoto.filtered.txt
+    │   ├── 0.2-place-Osak.filtered.txt
+    │   ├── 0.2-place-Pert.filtered.txt
+    │   ├── 0.2-place-Toro.filtered.txt
+    │   ├── 0.2-place-Vien.filtered.txt
+    │   ├── 0.5-attribute-Buda.filtered.txt
+    │   ├── 0.5-attribute-Delh.filtered.txt
+    │   ├── 0.5-attribute-Edin.filtered.txt
+    │   ├── 0.5-attribute-Glas.filtered.txt
+    │   ├── 0.5-attribute-Kyoto.filtered.txt
+    │   ├── 0.5-attribute-Osak.filtered.txt
+    │   ├── 0.5-attribute-Pert.filtered.txt
+    │   ├── 0.5-attribute-Toro.filtered.txt
+    │   ├── 0.5-attribute-Vien.filtered.txt
+    │   ├── 0.5-place-Buda.filtered.txt
+    │   ├── 0.5-place-Delh.filtered.txt
+    │   ├── 0.5-place-Edin.filtered.txt
+    │   ├── 0.5-place-Glas.filtered.txt
+    │   ├── 0.5-place-Kyoto.filtered.txt
+    │   ├── 0.5-place-Osak.filtered.txt
+    │   ├── 0.5-place-Pert.filtered.txt
+    │   ├── 0.5-place-Toro.filtered.txt
+    │   ├── 0.5-place-Vien.filtered.txt
+    │   ├── 0.8-attribute-Buda.filtered.txt
+    │   ├── 0.8-attribute-Delh.filtered.txt
+    │   ├── 0.8-attribute-Edin.filtered.txt
+    │   ├── 0.8-attribute-Glas.filtered.txt
+    │   ├── 0.8-attribute-Kyoto.filtered.txt
+    │   ├── 0.8-attribute-Osak.filtered.txt
+    │   ├── 0.8-attribute-Pert.filtered.txt
+    │   ├── 0.8-attribute-Toro.filtered.txt
+    │   ├── 0.8-attribute-Vien.filtered.txt
+    │   ├── 0.8-place-Buda.filtered.txt
+    │   ├── 0.8-place-Delh.filtered.txt
+    │   ├── 0.8-place-Edin.filtered.txt
+    │   ├── 0.8-place-Glas.filtered.txt
+    │   ├── 0.8-place-Kyoto.filtered.txt
+    │   ├── 0.8-place-Osak.filtered.txt
+    │   ├── 0.8-place-Pert.filtered.txt
+    │   ├── 0.8-place-Toro.filtered.txt
+    │   └── 0.8-place-Vien.filtered.txt
+    └── train
+        ├── 0.2-attribute-Buda.filtered.txt
+        ├── 0.2-attribute-Delh.filtered.txt
+        ├── 0.2-attribute-Edin.filtered.txt
+        ├── 0.2-attribute-Glas.filtered.txt
+        ├── 0.2-attribute-Kyoto.filtered.txt
+        ├── 0.2-attribute-Osak.filtered.txt
+        ├── 0.2-attribute-Pert.filtered.txt
+        ├── 0.2-attribute-Toro.filtered.txt
+        ├── 0.2-attribute-Vien.filtered.txt
+        ├── 0.2-place-Buda.filtered.txt
+        ├── 0.2-place-Delh.filtered.txt
+        ├── 0.2-place-Edin.filtered.txt
+        ├── 0.2-place-Glas.filtered.txt
+        ├── 0.2-place-Kyoto.filtered.txt
+        ├── 0.2-place-Osak.filtered.txt
+        ├── 0.2-place-Pert.filtered.txt
+        ├── 0.2-place-Toro.filtered.txt
+        ├── 0.2-place-Vien.filtered.txt
+        ├── 0.5-attribute-Buda.filtered.txt
+        ├── 0.5-attribute-Delh.filtered.txt
+        ├── 0.5-attribute-Edin.filtered.txt
+        ├── 0.5-attribute-Glas.filtered.txt
+        ├── 0.5-attribute-Kyoto.filtered.txt
+        ├── 0.5-attribute-Osak.filtered.txt
+        ├── 0.5-attribute-Pert.filtered.txt
+        ├── 0.5-attribute-Toro.filtered.txt
+        ├── 0.5-attribute-Vien.filtered.txt
+        ├── 0.5-place-Buda.filtered.txt
+        ├── 0.5-place-Delh.filtered.txt
+        ├── 0.5-place-Edin.filtered.txt
+        ├── 0.5-place-Glas.filtered.txt
+        ├── 0.5-place-Kyoto.filtered.txt
+        ├── 0.5-place-Osak.filtered.txt
+        ├── 0.5-place-Pert.filtered.txt
+        ├── 0.5-place-Toro.filtered.txt
+        ├── 0.5-place-Vien.filtered.txt
+        ├── 0.8-attribute-Buda.filtered.txt
+        ├── 0.8-attribute-Delh.filtered.txt
+        ├── 0.8-attribute-Edin.filtered.txt
+        ├── 0.8-attribute-Glas.filtered.txt
+        ├── 0.8-attribute-Kyoto.filtered.txt
+        ├── 0.8-attribute-Osak.filtered.txt
+        ├── 0.8-attribute-Pert.filtered.txt
+        ├── 0.8-attribute-Toro.filtered.txt
+        ├── 0.8-attribute-Vien.filtered.txt
+        ├── 0.8-place-Buda.filtered.txt
+        ├── 0.8-place-Delh.filtered.txt
+        ├── 0.8-place-Edin.filtered.txt
+        ├── 0.8-place-Glas.filtered.txt
+        ├── 0.8-place-Kyoto.filtered.txt
+        ├── 0.8-place-Osak.filtered.txt
+        ├── 0.8-place-Pert.filtered.txt
+        ├── 0.8-place-Toro.filtered.txt
+        └── 0.8-place-Vien.filtered.txt
+
+6 directories, 216 files
