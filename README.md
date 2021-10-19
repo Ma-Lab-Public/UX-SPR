@@ -1,6 +1,6 @@
 ## Basic infomation/ program description / citation
 *Waiting for Yikun*
-## Build  enviroment
+## Build  enviroment (under python3.8)
 ```bash
 pip3 install -f requirement.txt -U
 ```
