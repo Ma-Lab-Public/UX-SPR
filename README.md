@@ -1,3 +1,5 @@
+## Basic infomation/ program description / citation
+*Waiting for Yikun*
 ## Build  enviroment
 ```bash
 pip3 install -f requirement.txt -U
@@ -15,6 +17,7 @@ Configure aws account in *~/.aws/credentials*
 bash ./bash_scripts/run_all.sh 
 ```
 ## Evaluation
+*Waiting for Yikun*
 ## Caculate perplexity
 #### 1. Copy pkl model from ./pkl_bkp
 ```bash
