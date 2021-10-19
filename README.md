@@ -6,8 +6,8 @@ Configure aws account in *~/.aws/credentials*
 
 ## Learning
 #### 1. Create result folder
-1. Create result folder in S3 
-2. Create *pkl_model*, *doing* and *done* folder under result folder    
+1. Create ***result folder*** in S3 
+2. Create ***pkl_model***, ***doing*** and ***done*** folder under result folder    
 3. Configure result folder in ./bash_scripts/run_batch.sh line 4
 
 #### 2. Run learning
