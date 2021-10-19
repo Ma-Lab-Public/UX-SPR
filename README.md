@@ -1,8 +1,8 @@
 ## Basic infomation/ program description / citation
 *Waiting for Yikun*
-## Build  enviroment (under python3.8)
+## Build  environment (under python3.8)
 ```bash
-pip3 install -f requirement.txt -U
+pip3 install -r requirement.txt -U
 ```
 Configure aws account in *~/.aws/credentials*
 
@@ -18,12 +18,12 @@ bash ./bash_scripts/run_all.sh
 ```
 ## Evaluation
 *Waiting for Yikun*
-## Caculate perplexity
+## Calculate perplexsity
 #### 1. Copy pkl model from ./pkl_bkp
 ```bash
-mv ./pkl_bkp/* ./pkl_model/
+cp ./pkl_bkp/* ./pkl_model/
 ```
-#### 2. Run perplexisty caculation
+#### 2. Run perplexsity caculation
 ```bash
 python(3) ./src/perplexsity/calc_perplexity_with_pyro_time_split.py
 ```
