@@ -345,7 +345,8 @@ def run(ex):
 
         posterior = torch.load(eid + '.pkl')
       
-        data_type = 'time' 
+        data_type = 'time'
+        #data_type = 'user'
         repeat_time = 10
         
         test_data = get_test_data(posterior['data_file'], posterior['test_ids'])
@@ -405,8 +406,8 @@ def run(ex):
             weights_wl = calculate_weights_using_scores(loc_ranking_temp, loc_scores_from_user, weights_ini)
             weights_wl = calculate_weights_using_scores(act_ranking_temp, act_scores_from_user, weights_wl)
             recommend_wl[i_r, iii, :] = recommend_according_to_weights(weights_wl, locs_prob, 'NA')#loc_scores_from_user[0, :])
-
-        metrics_base = calc_score_base(posterior, data_per_user)
+        if data_type == 'time':
+            metrics_base = calc_score_base(posterior, data_per_user)
         metrics_al = calc_score(recommend_al, data_per_user_new)
         metrics_wl = calc_score(recommend_wl, data_per_user_new)
         metrics_wtol = calc_score(recommend_wtol, data_per_user_new)
