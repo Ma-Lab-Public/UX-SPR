@@ -47,7 +47,7 @@ def get_test_data(data_file, test_ids):
         tag_matrix = []
 
         for i, row in enumerate(reader):
-            #if i in test_ids:
+            if i in test_ids:
                 us.append(int(row[1]))
                 ts.append(int(row[2]))
                 ls.append(int(row[3]))
@@ -73,7 +73,7 @@ def get_training_data(data_file, test_ids):
         tag_matrix = []
 
         for i, row in enumerate(reader):
-            #if i not in test_ids:
+            if i not in test_ids:
                 us.append(int(row[1]))
                 ts.append(int(row[2]))
                 ls.append(int(row[3]))
@@ -109,11 +109,7 @@ def divide_data_by_user(data, posterior, method='loc'):
       return user_activity_matrix
 
 
-def calculate_scores_for_images(images_prob, n_length, distribution_method):
-    # n_length : the number of replication
-    # calculate ranking probability, the distribution of ranking for each image
-    if distribution_method not in ['uniform', 'normal']:
-        return
+def calculate_scores_for_images(images_prob, n_length, distribution_method='normal'):
 
     a_length = len(images_prob[0, :])
     ranking = torch.zeros(a_length, 100, 10, device=device)
@@ -125,7 +121,6 @@ def calculate_scores_for_images(images_prob, n_length, distribution_method):
                                 device=device)
             for ii in range(1, 101):
                 ranking[temp[round(a_length / 100 * (ii - 1)):round(a_length / 100 * ii)], ii - 1, j] += 1
-    # ranking : (image_id, image_scores)
 
     ranking = ranking / n_length
     ranking_final = torch.zeros(a_length, 5, 10, device=device)
@@ -147,8 +142,6 @@ def calculate_scores_for_images(images_prob, n_length, distribution_method):
 
 
 def calculate_weights_using_scores(ranking, scores, weights_old):
-    # scores_from_user : (image_id, scores), weights_old : weights of 10 groups
-    # calculate weights of each group using the ranking probability, which is calculated from scores rated by user
     if sum(weights_old) != 1:
       weights_old /= sum(weights_old)
     weights = []
@@ -158,33 +151,7 @@ def calculate_weights_using_scores(ranking, scores, weights_old):
     return torch.tensor(weights)/sum(weights)
 
 
-def calculate_weights_using_scores_cf(loc_prob, scores, weights_old, method='NA'):
-    weights = []
-    if method == "regular" :
-        for i in range(0, 10):
-            weights.append(weights_old[i] * sum(loc_prob[i, scores[0, :]]*(scores[1, :]-2))
-                /torch.sqrt((loc_prob[i, scores[0, :]]*loc_prob[i, scores[0, :]]).sum()*(scores[1, :]*scores[1, :]).sum()))
-    elif method == 'prod':
-        for i in range(0, 10):
-            weights.append(weights_old[i] * loc_prob[i, scores[0, 0]] * (1-loc_prob[i, scores[0, 1:]]).prod()
-                      /torch.sqrt((loc_prob[i, scores[0, :]]*loc_prob[i, scores[0, :]]).sum()*(scores[1, :]*scores[1, :]).sum())*weights_old[i])
-    elif method == 'exp':
-        for i in range(0, 10):
-            weights.append( weights_old[i] * torch.exp(sum(loc_prob[i, scores[0, :]]*scores[1, :])))
-    else:
-        for i in range(0, 10):
-            weights.append( loc_prob[i, scores[0, 0]] )#* (1-loc_prob[i, scores[0, 1:]]).prod())
-            #weights.append(weights_old[i] * (loc_prob[i, scores[0, 0]]^scores[1, 0]).prod())
-            #weights.append(weights_old[i] * loc_prob[i, scores[0, 0]] * (1-loc_prob[i, scores[0, 1:]]).prod())
-            #weights.append( weights_old[i] * torch.exp(sum(loc_prob[i, scores[0, :]]*scores[1, :])))
-            #/torch.sqrt((loc_prob[i, scores[0, :]]*loc_prob[i, scores[0, :]]).sum()*(scores[1, :]*scores[1, :]).sum())*weights_old[i] )
-
-    return torch.tensor(weights)/sum(weights)
-
-
 def recommend_according_to_weights(weights, est_prob, used_for_scores):
-    # weights.size : 1*10; est_prob.size : 10*length
-    # recommend image/location/activity according to weights and estimated probability
     rec_prob = (weights.unsqueeze(1) * est_prob).sum(0)
     recommend = torch.argsort(rec_prob, descending=True)
     if used_for_scores == "NA":
@@ -212,17 +179,19 @@ def let_users_give_scores(data):
 
     return scores
 
-def let_users_give_scores_likedislike(data):
-    high_score_place = list(np.random.choice((data != 0).nonzero().squeeze(), 1, replace=False))
-    low_score_place = list(np.random.choice((data == 0).nonzero().squeeze(), 4, replace=False))
-    high_score_place.extend(low_score_place)
-    high_score = list(np.random.choice(range(3, 4), 1))
-    low_score = list(np.random.choice(range(1, 2), 4, replace=True))
-    high_score.extend(low_score)
-    scores = [high_score_place, high_score]
-    scores = torch.tensor(scores)
 
-    return scores
+def let_user_give_feedback(data, recommend, k):
+    scores = []
+    recommend_test = recommend.tolist()
+    for ijk in range(0, k):
+        if (data[recommend[ijk]] != 0):
+            scores.extend(list(np.random.choice(range(3, 5), 1)))
+        else:
+            scores.extend(list(np.random.choice(range(0, 3), 1)))
+    scores_temp = [recommend_test, scores]
+    feedback_info = torch.tensor(scores_temp)
+
+    return feedback_info
 
 
 def scores_from_training_set(data):
@@ -238,34 +207,6 @@ def scores_from_training_set(data):
       scores = torch.tensor(scores)
 
     return scores
-
-def likedislike_from_training_set(data):
-    if (data != 0).nonzero().size(0) > 1 :
-      high_score_place = list(np.random.choice((data != 0).nonzero().squeeze(), (data != 0).nonzero().size(0), replace=False))
-      high_score = list(np.random.choice(range(3,4), len(high_score_place), replace=True))
-      scores = [high_score_place, high_score]
-      scores = torch.tensor(scores)
-    else:
-      high_score_place = list(np.random.choice([(data != 0).nonzero().squeeze().item()], (data != 0).nonzero().size(0), replace=False))
-      high_score = list(np.random.choice(range(3,4), len(high_score_place), replace=True))
-      scores = [high_score_place, high_score]
-      scores = torch.tensor(scores)
-
-    return scores
-
-
-def let_user_give_feedback(data, recommend, k):
-    scores = []
-    recommend_test = recommend.tolist()
-    for ijk in range(0, k):
-        if (data[recommend[ijk]] != 0):
-            scores.extend(list(np.random.choice(range(3, 5), 1)))
-        else:
-            scores.extend(list(np.random.choice(range(0, 3), 1)))
-    scores_temp = [recommend_test, scores]
-    feedback_info = torch.tensor(scores_temp)
-
-    return feedback_info
 
 
 def create_location_ranking(posterior, sample_size, method='NA'):
@@ -285,9 +226,7 @@ def create_location_ranking(posterior, sample_size, method='NA'):
              theta.view(size, -1, 1, 1) * phi.unsqueeze(2) * pi_star).sum(1)
     else:
         probs = (theta.view(size, -1, 1, 1) * pi.unsqueeze(3) * phi.unsqueeze(2)).sum(1)
-    #probs = (theta.view(size, -1, 1, 1) * pi_star.unsqueeze(3) * phi.unsqueeze(2)).sum(1).mean(0).unsqueeze(3)
     ranking = torch.argsort(probs, dim=2, descending=True)
-    # ranking: (sample_size, user_count, location_count)
 
     return ranking
 
@@ -296,38 +235,12 @@ def evaluation_pre_and_recall(recommend_rank, k, data, save_path='NA'):
     
     recommend_top_k = recommend_rank[:, :, :k].to(torch.int64)
     
-    
     recommend_top_k_bag = torch.zeros(recommend_rank.shape).to(device).scatter_(2, recommend_top_k, 1)
     
     top_k_correct_bag = torch.logical_and(recommend_top_k_bag, data.expand(recommend_top_k_bag.shape))
     top_k_correct_count_per_user = torch.mean(top_k_correct_bag.type(torch.Tensor).sum(2), 0).to(device)
     top_k_correct_count_per_location = torch.mean(top_k_correct_bag.type(torch.Tensor).sum(1), 0).to(device)
-    l_rec_number = torch.ones(recommend_rank.size(2))
-    for i_rec in range(recommend_rank.size(2)):
-      if (recommend_top_k == i_rec).sum()>0 :
-        l_rec_number[i_rec] = (recommend_top_k == i_rec).sum()/recommend_rank.size(0)
     user_count_having_locations = torch.sum(data.sum(1) > 0).to(device)
-
-    #20210908 User-Oriented Fairness
-    advan_n = torch.round(user_count_having_locations*0.1)
-    data_advan = torch.argsort((data != 0).sum(1),descending=True)[:(advan_n.int())]
-    data_disadvan = torch.argsort((data != 0).sum(1),descending=True)[(advan_n.int()):]
-
-    precision_ad = torch.sum(top_k_correct_count_per_user[data_advan]) / (advan_n.int()) / k
-    recalls_ad = top_k_correct_count_per_user[data_advan] / (data[data_advan, :]!=0).sum(1)
-    recalls_ad[torch.isnan(recalls_ad)] = 0
-    recalls_ad[recalls_ad == float('inf')] = 0
-    recall_ad = torch.sum(recalls_ad) / (advan_n.int())
-    F_advan = 2/(1/precision_ad+1/recall_ad)
-
-    precision_dis = torch.sum(top_k_correct_count_per_user[data_disadvan]) / (user_count_having_locations-(advan_n.int())) / k
-    recalls_dis = top_k_correct_count_per_user[data_disadvan] / (data[data_disadvan, :]!=0).sum(1)
-    recalls_dis[torch.isnan(recalls_dis)] = 0
-    recalls_dis[recalls_dis == float('inf')] = 0
-    recall_dis = torch.sum(recalls_dis) / (user_count_having_locations-(advan_n.int()))
-    F_disadvan = 2/(1/precision_dis+1/recall_dis)
-
-    UOF = F_advan-F_disadvan
 
     precision = torch.sum(top_k_correct_count_per_user) / user_count_having_locations / k
     recalls = top_k_correct_count_per_user / (data!=0).sum(1)
@@ -335,34 +248,28 @@ def evaluation_pre_and_recall(recommend_rank, k, data, save_path='NA'):
     recalls[recalls == float('inf')] = 0
     recall = torch.sum(recalls) / user_count_having_locations
 
-    recall_loc = top_k_correct_count_per_location / (data!=0).sum(0)
-    recall_loc[torch.isnan(recall_loc)] = 0
-    recall_loc[recall_loc == float('inf')] = 0
-
-    #20210814new fairness
-    #user_fairness = torch.absolute(top_k_correct_count_per_user-torch.mean(top_k_correct_count_per_user)).sum()
     pre_per_user = top_k_correct_count_per_user/k
     recall_per_user = recalls
-    pre_per_loc = top_k_correct_count_per_location/l_rec_number
-    recall_per_loc = recall_loc
-    user_fairness = torch.std((top_k_correct_count_per_user/k))
-    location_fairness = torch.std(pre_per_loc)
+    F_per_user = 2/(1/pre_per_user+1/recall_per_user)
+    sorted,indices = torch.sort(F_per_user,descending=False)
+    cumsum_data = np.cumsum(sorted)[-(user_count_having_locations):]
+    abs_fair_temp = torch.ones(user_count_having_locations)
+    abs_fair = np.cumsum(abs_fair_temp)
+    abs_fair /= user_count_having_locations
 
-    #20210819 F-measure
+    fair_data = (cumsum_data/cumsum_data[-1])
+    fair_result = (abs_fair-fair_data).sum(0)/abs_fair.sum(0)
+
     F_measure = 2/(1/precision+1/recall)
 
     pre_recall_at_k = {f"precision@{k}": precision.to('cpu').item(),
                        f"recall@{k}": recall.to('cpu').item(),
-                       f"u_fairness@{k}": user_fairness.to('cpu').item(),
-                       f"l_fairness@{k}": location_fairness.to('cpu').item(),
                        f"F_measure@{k}": F_measure.to('cpu').item(),
-                       f"UOF@{k}": UOF.to('cpu').item()}
-    # save 2021/09/19
+                       f"Gini@{k}": fair_result.to('cpu').item()}
     if save_path!='NA':
       torch.save(pre_per_user,save_path+'_'+str(k)+'_user_precision.pkl')
-      torch.save(pre_per_loc,save_path+'_'+str(k)+'_loc_precision.pkl')
       torch.save(recall_per_user,save_path+'_'+str(k)+'_user_recall.pkl')
-      torch.save(recall_per_loc,save_path+'_'+str(k)+'_loc_recall.pkl')
+
     return pre_recall_at_k
 
 
@@ -372,23 +279,23 @@ def calc_score_base(posterior, data, method='NA',save_path='NA'):
     sample_size = 10
     ranking = create_location_ranking(posterior, sample_size, method)
 
-    pre_recall_at_one = evaluate_location_precision_and_recall(ranking, 1, data,save_path)
+    pre_recall_at_one = evaluation_pre_and_recall(ranking, 1, data,save_path)
     result_metrics.update(pre_recall_at_one)
     print(pre_recall_at_one)
 
-    pre_recall_at_five = evaluate_location_precision_and_recall(ranking, 5, data,save_path)
+    pre_recall_at_five = evaluation_pre_and_recall(ranking, 5, data,save_path)
     result_metrics.update(pre_recall_at_five)
     print(pre_recall_at_five)
 
-    pre_recall_at_ten = evaluate_location_precision_and_recall(ranking, 10, data,save_path)
+    pre_recall_at_ten = evaluation_pre_and_recall(ranking, 10, data,save_path)
     result_metrics.update(pre_recall_at_ten)
     print(pre_recall_at_ten)
 
-    pre_recall_at_fifteen = evaluate_location_precision_and_recall(ranking, 15, data,save_path)
+    pre_recall_at_fifteen = evaluation_pre_and_recall(ranking, 15, data,save_path)
     result_metrics.update(pre_recall_at_fifteen)
     print(pre_recall_at_fifteen)
 
-    pre_recall_at_twenty = evaluate_location_precision_and_recall(ranking, 20, data,save_path)
+    pre_recall_at_twenty = evaluation_pre_and_recall(ranking, 20, data,save_path)
     result_metrics.update(pre_recall_at_twenty)
     print(pre_recall_at_twenty)
 
@@ -438,7 +345,9 @@ def run(ex):
 
         posterior = torch.load(eid + '.pkl')
       
+        data_type = 'time' 
         repeat_time = 10
+        
         test_data = get_test_data(posterior['data_file'], posterior['test_ids'])
         train_data = get_training_data(posterior['data_file'], posterior['test_ids'])
 
@@ -453,12 +362,14 @@ def run(ex):
 
         loc_ranking_temp = calculate_scores_for_images(locs_prob, 1000, "normal")
         act_ranking_temp = calculate_scores_for_images(acts_prob, 1000, "normal")
-
+        test_loc_per_user = divide_data_by_user(test_data, posterior, 'loc')
+        test_act_per_user = divide_data_by_user(test_data, posterior, 'act')
+        data_per_user = divide_data_by_user(test_data, posterior, 'loc')
         loc_per_user_new = test_loc_per_user[((test_loc_per_user != 0).sum(1) > 0), :locs_prob.size(1)]
         act_per_user_new = test_act_per_user[((test_act_per_user != 0).sum(1) > 0), :acts_prob.size(1)]
 
-        loc_train_per_user = divide_data_by_user(get_training_data(train_data_path, posterior['test_ids']), posterior, method='loc')
-        act_train_per_user = divide_data_by_user(get_training_data(train_data_path, posterior['test_ids']), posterior, method='act')
+        loc_train_per_user = divide_data_by_user(train_data, posterior, method='loc')
+        act_train_per_user = divide_data_by_user(train_data, posterior, method='act')
 
         data_per_user_new = loc_per_user_new
 
