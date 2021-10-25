@@ -3,9 +3,9 @@ This repository contains dataset based on flickr and code that implements the us
 
 UEM is a probabilistic generation model for analyzing tourist behaviors in sightseeing spots, which involves four factors: Who (does it), What (the tourist does), Where (the tourist does it), and When (the tourist does it). With UEM, we could reveal "what we can do/enjoy there" and recommend sightseeing resources based on user behavior.
 
-The pseudo-rating mechanism is proposed to handle the cold-start scenario, wherein no historical data exists on the tourists new to the city. Several keywords concerning "Where" and "What" are provided to new tourists to be rated as start-up information, and recommendations are made based on the B-UEM.
+The pseudo-rating mechanism is proposed to handle the cold-start scenario, wherein no historical data exists on the tourists new to the city. Several keywords concerning "Where" and "What" are provided to new tourists to be rated as start-up information, and recommendations are made based on the UEM.
 
-We provide two approaches, time-split and user-split, to split dataset. The time-split method regards tourist records of each user as a sequence and sets a part of the sequence as the training data and the remaining part as the testing data to simulate a scenario wherein the past records of all users are known and used to recommend new locations to them.  In contrast, the user-split method selects a number of users as the training group and the others as the test group to simulate the cold-start situation wherein there is no knowledge concerning new tourists.
+We provide two approaches to split datasets, time-split and user-split. The time-split method regards tourist records of each user as a sequence and sets a part of the sequence as the training data and the remaining part as the testing data to simulate a scenario wherein the past records of all users are known and used to recommend new locations to them.  In contrast, the user-split method selects a number of users as the training group and the others as the test group to simulate the cold-start situation wherein there is no knowledge concerning new tourists.
 
 ## Build  environment (under python3.8)
 ```bash
