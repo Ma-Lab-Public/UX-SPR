@@ -345,8 +345,6 @@ def run(ex):
 
         posterior = torch.load(eid + '.pkl')
       
-        data_type = 'time'
-        #data_type = 'user'
         repeat_time = 10
         
         test_data = get_test_data(posterior['data_file'], posterior['test_ids'])
@@ -366,34 +364,24 @@ def run(ex):
         test_loc_per_user = divide_data_by_user(test_data, posterior, 'loc')
         test_act_per_user = divide_data_by_user(test_data, posterior, 'act')
         data_per_user = divide_data_by_user(test_data, posterior, 'loc')
-        loc_per_user_new = test_loc_per_user[((test_loc_per_user != 0).sum(1) > 0), :locs_prob.size(1)]
-        act_per_user_new = test_act_per_user[((test_act_per_user != 0).sum(1) > 0), :acts_prob.size(1)]
 
-        loc_train_per_user = divide_data_by_user(train_data, posterior, method='loc')
-        act_train_per_user = divide_data_by_user(train_data, posterior, method='act')
+        train_loc_per_user = divide_data_by_user(train_data, posterior, method='loc')
+        train_act_per_user = divide_data_by_user(train_data, posterior, method='act')
 
-        data_per_user_new = loc_per_user_new
-
-        recommend_al = torch.zeros(repeat_time, data_per_user_new.size(0), locs_prob.size(1))
-        recommend_wtol = torch.zeros(repeat_time, data_per_user_new.size(0), locs_prob.size(1))
-        recommend_wl = torch.zeros(repeat_time, data_per_user_new.size(0), locs_prob.size(1))
-
+        recommend_al = torch.zeros(repeat_time, data_per_user.size(0), locs_prob.size(1))
+        recommend_wtol = torch.zeros(repeat_time, data_per_user.size(0), locs_prob.size(1))
+        recommend_wl = torch.zeros(repeat_time, data_per_user.size(0), locs_prob.size(1))
         for i_r in range(repeat_time):
           weights_ini = theta[i_r, :]
-          for iii in range(0, data_per_user_new.size(0)):
-
-            if data_type == 'time' :
-              if ((loc_train_per_user[iii, :]!=0).sum()>0)&((act_train_per_user[iii, :]!=0).sum()>0):
-                loc_scores_from_user = scores_from_training_set(loc_train_per_user[iii, :])
-                act_scores_from_user = scores_from_training_set(act_train_per_user[iii, :])
-              else:
-                loc_scores_from_user = torch.tensor([[0,1],[1,1]])
-                act_scores_from_user = torch.tensor([[0,1],[1,1]])
+          for iii in range(0, data_per_user.size(0)):
+            if ((train_loc_per_user[iii, :]!=0).sum()>0)&((test_loc_per_user[iii, :]!=0).sum()>0) :
+                data_type = 'time'
+                loc_scores_from_user = scores_from_training_set(train_loc_per_user[iii, :])
+                act_scores_from_user = scores_from_training_set(train_act_per_user[iii, :])
+            elif ((test_loc_per_user[iii, :]!=0).sum()>0)&((test_act_per_user[iii, :]!=0).sum()>0):
+                loc_scores_from_user = let_users_give_scores(test_loc_per_user[iii, :])
+                act_scores_from_user = let_users_give_scores(test_act_per_user[iii, :])
             else:
-              if ((loc_per_user_new[iii, :]!=0).sum()>0)&((act_per_user_new[iii, :]!=0).sum()>0):
-                loc_scores_from_user = let_users_give_scores(loc_per_user_new[iii, :])
-                act_scores_from_user = let_users_give_scores(act_per_user_new[iii, :])
-              else:
                 loc_scores_from_user = torch.tensor([[0,1],[1,1]])
                 act_scores_from_user = torch.tensor([[0,1],[1,1]])
 
@@ -406,11 +394,12 @@ def run(ex):
             weights_wl = calculate_weights_using_scores(loc_ranking_temp, loc_scores_from_user, weights_ini)
             weights_wl = calculate_weights_using_scores(act_ranking_temp, act_scores_from_user, weights_wl)
             recommend_wl[i_r, iii, :] = recommend_according_to_weights(weights_wl, locs_prob, 'NA')#loc_scores_from_user[0, :])
+
         if data_type == 'time':
             metrics_base = calc_score_base(posterior, data_per_user)
-        metrics_al = calc_score(recommend_al, data_per_user_new)
-        metrics_wl = calc_score(recommend_wl, data_per_user_new)
-        metrics_wtol = calc_score(recommend_wtol, data_per_user_new)
+        metrics_al = calc_score(recommend_al, data_per_user)
+        metrics_wl = calc_score(recommend_wl, data_per_user)
+        metrics_wtol = calc_score(recommend_wtol, data_per_user)
 
         # rm pickl
         if os.path.exists(eid + '.pkl'):
