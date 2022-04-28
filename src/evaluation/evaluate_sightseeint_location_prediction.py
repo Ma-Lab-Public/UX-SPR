@@ -262,10 +262,43 @@ def evaluation_pre_and_recall(recommend_rank, k, data, save_path='NA'):
 
     F_measure = 2/(1/precision+1/recall)
 
+    recommend_k = recommend_rank.to(torch.int64)
+    recommend_correct = torch.zeros(recommend_k.size())
+    for i in range(recommend_k.size(1)):
+      for j in range(10):
+        recommend_correct[j,i,:] += (data[i,recommend_k[j,i,:]] != 0)
+
+    user_have_location = recommend_correct.size(1)
+    val_counter = torch.tensor(range(1,recommend_correct.size(2)+1)).view(1,1,-1)
+    NDCG_counter = torch.log2(val_counter+1)
+    sorted_NDCG,indices = recommend_correct.sort(1,descending=True)
+    #MRR
+    MRR_per_user = (1/((recommend_correct.cumsum(2) == 0).sum(2)+1)).mean(0)
+    abs_fair_temp = torch.ones(user_have_location)
+    abs_fair = abs_fair_temp.cumsum(0)
+    abs_fair /= MRR_per_user.size(0)
+    sorted,indices = torch.sort(MRR_per_user,descending=False)
+    sorted = sorted[(-user_have_location):]
+    Gini_MRR = (abs_fair - sorted.cumsum(0)/MRR_per_user.sum()).sum(0)/abs_fair.sum(0)
+    MRR = (1/((recommend_correct.cumsum(2) == 0).sum(2)+1)).mean(0).sum()/user_have_location
+
+    #MAP
+    MAP_per_user = (((recommend_correct.cumsum(2)*recommend_correct/val_counter).cumsum(2)/(recommend_correct.cumsum(2)+(recommend_correct.cumsum(2)==0)))[:,:,:k].mean(2)).mean(0)
+    sorted,indices = torch.sort(MAP_per_user,descending=False)
+    sorted = sorted[(-user_have_location):]
+    Gini_MAP = (abs_fair - sorted.cumsum(0)/MAP_per_user.sum()).sum(0)/abs_fair.sum(0)
+    MAP = (((recommend_correct.cumsum(2)*recommend_correct/val_counter).cumsum(2)/(recommend_correct.cumsum(2)+(recommend_correct.cumsum(2)==0)))[:,:,:k].mean(2)).mean(0).sum()/user_have_location
+
+
     pre_recall_at_k = {f"precision@{k}": precision.to('cpu').item(),
                        f"recall@{k}": recall.to('cpu').item(),
                        f"F_measure@{k}": F_measure.to('cpu').item(),
-                       f"Gini@{k}": fair_result.to('cpu').item()}
+                       f"Gini_F@{k}": fair_result.to('cpu').item(),
+                       f"MAP@{k}": MAP.to('cpu').item(),
+                       f"Gini_MAP@{k}": Gini_MAP.to('cpu').item(),
+                       f"MRR": MRR.to('cpu').item(),
+                       f"Gini_MRR": Gini_MRR.to('cpu').item()
+                       }
     if save_path!='NA':
       torch.save(pre_per_user,save_path+'_'+str(k)+'_user_precision.pkl')
       torch.save(recall_per_user,save_path+'_'+str(k)+'_user_recall.pkl')
